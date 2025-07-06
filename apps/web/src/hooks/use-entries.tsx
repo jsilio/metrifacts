@@ -5,12 +5,14 @@ import type {
 import {
   queryOptions,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { queryKeys as metricQueryKeys } from "./use-metrics";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
 
 export const queryKeys = {
   entries: {
@@ -105,6 +107,18 @@ export const metricEntriesQueryOptions = (
     queryFn: () => getMetricEntries(metricId, params),
     enabled: !!metricId,
   });
+
+export function useMetricEntries(
+  metricId: string,
+  params?: {
+    limit?: number;
+    from?: string;
+    to?: string;
+    order?: "asc" | "desc";
+  }
+) {
+  return useQuery(metricEntriesQueryOptions(metricId, params));
+}
 
 export function useCreateMetricEntry({
   onSuccess,
