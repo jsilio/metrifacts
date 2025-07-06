@@ -10,18 +10,17 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "check-types": "turbo check-types",
-    "dev:native": "turbo -F native dev",
-    "dev:web": "turbo -F web dev",
-    "dev:server": "turbo -F server dev",
-    "db:push": "turbo -F server db:push",
-    "db:studio": "turbo -F server db:studio",
-    "db:generate": "turbo -F server db:generate",
+    "dev:web": "turbo -F @metrifacts/web dev",
+    "dev:api": "turbo -F @metrifacts/api dev",
+    "db:push": "turbo -F @metrifacts/api db:push",
+    "db:studio": "turbo -F @metrifacts/api db:studio",
+    "db:generate": "turbo -F @metrifacts/api db:generate",
     "db:migrate": "turbo -F server db:migrate"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@biomejs/biome": "^2.0.6",
     "turbo": "^2.5.4",
-    "@biomejs/biome": "^2.0.0"
+    "ultracite": "5.0.32"
   },
   "packageManager": "pnpm@10.4.1"
 }
