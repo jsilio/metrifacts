@@ -1,0 +1,37 @@
+import type { Metric } from "@metrifacts/api/schema";
+
+import { MetricCard } from "@/components/metric-card";
+import { cn } from "@/lib/utils";
+
+type MetricListProps = {
+  category: Metric["category"];
+  metrics: Metric[];
+};
+
+export function MetricList({ category = "general", metrics }: MetricListProps) {
+  return (
+    <section className="space-y-8">
+      <h2 className="border-border border-b pb-2 font-semibold text-xl capitalize">
+        {category.split("-").join(" ")}
+      </h2>
+
+      <ul
+        className={cn(
+          "grid items-stretch gap-4",
+          metrics.length === 1 && " grid-cols-1",
+          metrics.length === 2 && "grid-cols-2",
+          metrics.length >= 3 && "grid-cols-2"
+        )}
+      >
+        {metrics.map((metric, index) => (
+          <li
+            key={metric.id}
+            className={cn(metrics.length >= 3 && index === 0 && "col-span-2")}
+          >
+            <MetricCard {...metric} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}

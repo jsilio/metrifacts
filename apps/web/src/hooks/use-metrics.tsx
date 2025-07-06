@@ -27,11 +27,10 @@ export const getMetrics = async (): Promise<Metric[]> => {
   return response.json();
 };
 
-export const metricsQueryOptions = () =>
-  queryOptions({
-    queryKey: queryKeys.metrics.list(),
-    queryFn: getMetrics,
-  });
+export const metricsQueryOptions = queryOptions({
+  queryKey: queryKeys.metrics.list(),
+  queryFn: getMetrics,
+});
 
 export const createMetric = async (
   metric: CreateMetricSchema

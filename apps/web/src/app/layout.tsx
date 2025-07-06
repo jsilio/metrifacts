@@ -33,10 +33,8 @@ export default function RootLayout({
         className={cn(geistSans.variable, geistMono.variable, "antialiased")}
       >
         <Providers>
-          <div className="grid h-svh grid-rows-[auto_1fr]">
-            <Header />
-            <main className="mx-auto max-w-7xl p-6">{children}</main>
-          </div>
+          <Header />
+          <main className="mx-auto max-w-7xl px-6 py-10">{children}</main>
         </Providers>
       </body>
     </html>
