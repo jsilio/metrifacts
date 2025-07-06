@@ -1,25 +1,77 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 
-import { prisma } from "@/db";
+import { prisma as db } from "@/db";
+import * as HttpStatusCodes from "@/lib/http-status-codes";
 
-import { CreateMetricSchema } from "./metrics.schemas";
+import {
+  CreateMetricEntrySchema,
+  CreateMetricSchema,
+  IdParamsSchema,
+  MetricEntriesQuerySchema,
+} from "./metrics.schemas";
 
 const router = new Hono();
 
 router.get("/", async (c) => {
-  const metrics = await prisma.metric.findMany({
+  const metrics = await db.metric.findMany({
     orderBy: { createdAt: "desc" },
   });
 
-  return c.json({ success: true, data: metrics });
+  return c.json(metrics, HttpStatusCodes.OK);
 });
 
 router.post("/", zValidator("json", CreateMetricSchema), async (c) => {
   const data = c.req.valid("json");
-  const metric = await prisma.metric.create({ data });
+  const metric = await db.metric.create({ data });
 
-  return c.json({ success: true, data: metric }, 201);
+  return c.json(metric, HttpStatusCodes.CREATED);
 });
+
+router.get(
+  "/:id/entries",
+  zValidator("param", IdParamsSchema),
+  zValidator("query", MetricEntriesQuerySchema),
+  async (c) => {
+    const { id } = c.req.valid("param");
+    const { limit, from, to, order = "asc" } = c.req.valid("query");
+
+    const entries = await db.metricEntry.findMany({
+      where: {
+        metricId: id,
+        ...((from || to) && {
+          timestamp: {
+            ...(from && { gte: new Date(from) }),
+            ...(to && { lte: new Date(to) }),
+          },
+        }),
+      },
+      include: { metric: true },
+      orderBy: { timestamp: order },
+      take: limit,
+    });
+
+    return c.json(entries, HttpStatusCodes.OK);
+  }
+);
+
+router.post(
+  "/:id/entries",
+  zValidator("param", IdParamsSchema),
+  zValidator("json", CreateMetricEntrySchema),
+  async (c) => {
+    const { id: metricId } = c.req.valid("param");
+    const data = c.req.valid("json");
+
+    const entry = await db.metricEntry.create({
+      data: {
+        metricId,
+        ...data,
+      },
+    });
+
+    return c.json(entry, HttpStatusCodes.CREATED);
+  }
+);
 
 export default router;
