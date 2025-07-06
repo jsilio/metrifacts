@@ -1,13 +1,15 @@
 import "dotenv/config";
+import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import { requestId } from "hono/request-id";
 
+import { onError } from "@/middlewares/on-error";
 import appRouter from "@/routes";
 
 const app = new Hono().basePath("/api");
 
-app.use(logger());
 app.use(
   "/*",
   cors({
@@ -16,10 +18,13 @@ app.use(
   })
 );
 
-app.get("/", (c) => c.json({ status: "OK" }));
-app.route("/", appRouter);
+app.use(logger());
+app.use(requestId());
 
-import { serve } from "@hono/node-server";
+app.onError(onError);
+
+app.get("/", (c) => c.json({ message: "Metrifacts API", status: "ok" }));
+app.route("/", appRouter);
 
 serve(
   {
