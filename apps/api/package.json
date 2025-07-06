@@ -17,17 +17,18 @@
     "schema": "./schema"
   },
   "dependencies": {
-    "dotenv": "^16.4.7",
-    "zod": "^3.25.16",
-    "hono": "^4.8.2",
     "@hono/node-server": "^1.14.4",
-    "@prisma/client": "^6.9.0"
+    "@hono/zod-validator": "^0.7.0",
+    "@prisma/client": "^6.9.0",
+    "dotenv": "^16.4.7",
+    "hono": "^4.8.2",
+    "zod": "^3.25.16"
   },
   "devDependencies": {
-    "tsc-alias": "^1.8.11",
-    "typescript": "^5.8.2",
-    "tsx": "^4.19.2",
     "@types/node": "^22.13.11",
-    "prisma": "^6.9.0"
+    "prisma": "^6.9.0",
+    "tsc-alias": "^1.8.11",
+    "tsx": "^4.19.2",
+    "typescript": "^5.8.2"
   }
 }

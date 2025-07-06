@@ -18,6 +18,43 @@ importers:
         specifier: 5.0.32
         version: 5.0.32(@types/node@22.16.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.20.3)
 
+  apps/api:
+    dependencies:
+      '@hono/node-server':
+        specifier: ^1.14.4
+        version: 1.15.0(hono@4.8.4)
+      '@hono/zod-validator':
+        specifier: ^0.7.0
+        version: 0.7.0(hono@4.8.4)(zod@3.25.74)
+      '@prisma/client':
+        specifier: ^6.9.0
+        version: 6.11.1(prisma@6.11.1(typescript@5.8.3))(typescript@5.8.3)
+      dotenv:
+        specifier: ^16.4.7
+        version: 16.6.1
+      hono:
+        specifier: ^4.8.2
+        version: 4.8.4
+      zod:
+        specifier: ^3.25.16
+        version: 3.25.74
+    devDependencies:
+      '@types/node':
+        specifier: ^22.13.11
+        version: 22.16.0
+      prisma:
+        specifier: ^6.9.0
+        version: 6.11.1(typescript@5.8.3)
+      tsc-alias:
+        specifier: ^1.8.11
+        version: 1.8.16
+      tsx:
+        specifier: ^4.19.2
+        version: 4.20.3
+      typescript:
+        specifier: ^5.8.2
+        version: 5.8.3
+
   apps/server:
     dependencies:
       '@hono/node-server':
@@ -361,6 +398,12 @@ packages:
     engines: {node: '>=18.14.1'}
     peerDependencies:
       hono: ^4
+
+  '@hono/zod-validator@0.7.0':
+    resolution: {integrity: sha512-qe2ZE6sHFE98dcUrbYMtS3bAV8hqcCOflykvZga2S7XhmNSZzT+dIz4OuMILsjLHkJw9JMn912/dB7dQOmuPvg==}
+    peerDependencies:
+      hono: '>=3.9.0'
+      zod: ^3.25.0
 
   '@img/sharp-darwin-arm64@0.34.2':
     resolution: {integrity: sha512-OfXHZPppddivUJnqyKoi5YVeHRkkNE2zUFT2gbpKxp/JZCFYEYubnMg+gOp6lWfasPrTS+KPosKqdI+ELYVDtg==}
@@ -2476,6 +2519,11 @@ snapshots:
   '@hono/node-server@1.15.0(hono@4.8.4)':
     dependencies:
       hono: 4.8.4
+
+  '@hono/zod-validator@0.7.0(hono@4.8.4)(zod@3.25.74)':
+    dependencies:
+      hono: 4.8.4
+      zod: 3.25.74
 
   '@img/sharp-darwin-arm64@0.34.2':
     optionalDependencies:
