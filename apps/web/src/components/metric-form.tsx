@@ -23,6 +23,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { useCreateMetric } from "@/hooks/use-metrics";
 
 type MetricFormProps = {
@@ -50,7 +58,7 @@ export function MetricForm({ onCancel, onSuccess }: MetricFormProps) {
   return (
     <Form {...form}>
       <form
-        className="space-y-4 pt-4"
+        className="space-y-6 pt-4"
         onSubmit={form.handleSubmit((data) => createMutation.mutate(data))}
       >
         <FormField
@@ -62,6 +70,56 @@ export function MetricForm({ onCancel, onSuccess }: MetricFormProps) {
               <FormControl>
                 <Input placeholder="Daily active users" {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex justify-between">
+                Description
+                <span className="text-muted-foreground text-xs">
+                  (optional)
+                </span>
+              </FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Number of unique users who logged in today"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="category"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Category</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                value={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="general">General</SelectItem>
+                  <SelectItem value="business">Revenue</SelectItem>
+                  <SelectItem value="users">Users</SelectItem>
+                </SelectContent>
+              </Select>
+
               <FormMessage />
             </FormItem>
           )}

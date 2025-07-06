@@ -6,10 +6,10 @@ export const IdParamsSchema = z.object({
 
 export const MetricSchema = z.object({
   id: z.string().cuid(),
-  name: z.string(),
-  description: z.string().nullish(),
-  category: z.string().nullish(),
-  unit: z.string().nullish(),
+  name: z.string().min(1, "Name is required"),
+  description: z.string().optional(),
+  category: z.string().optional(),
+  unit: z.string().optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });
@@ -28,7 +28,7 @@ export type UpdateMetricSchema = z.infer<typeof UpdateMetricSchema>;
 export const MetricEntrySchema = z.object({
   id: z.string().cuid(),
   metricId: z.string().cuid(),
-  value: z.number(),
+  value: z.number().min(0, "Value must be greater than 0"),
   timestamp: z.string().datetime(),
 });
 export type MetricEntry = z.infer<typeof MetricEntrySchema>;
