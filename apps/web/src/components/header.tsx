@@ -1,24 +1,22 @@
 "use client";
 
+import { ChartSplineIcon } from "lucide-react";
 import Link from "next/link";
 
 export function Header() {
-  const links = [{ to: "/", label: "Home" }];
-
   return (
-    <div>
-      <div className="flex flex-row items-center justify-between px-2 py-1">
-        <nav className="flex gap-4 text-lg">
-          {links.map(({ to, label }) => {
-            return (
-              <Link key={to} href={to}>
-                {label}
-              </Link>
-            );
-          })}
+    <header className="border-border border-b">
+      <div className="mx-auto flex max-w-7xl flex-row items-center justify-between p-4">
+        <nav className="flex items-center gap-3">
+          <ChartSplineIcon className="size-8 rounded-md bg-gradient-to-r from-indigo-500 to-purple-500 p-1 text-white" />
+          <Link
+            href="/"
+            className="font-bold font-mono text-3xl tracking-tight"
+          >
+            metrifacts
+          </Link>
         </nav>
       </div>
-      <hr />
-    </div>
+    </header>
   );
 }
