@@ -2,7 +2,14 @@
   "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
   "extends": ["ultracite"],
   "files": {
-    "includes": ["**", "!**/.next", "!**/dist", "!**/.turbo"]
+    "includes": [
+      "**",
+      "!**/.next",
+      "!**/dist",
+      "!**/.turbo",
+      "!**/*.css",
+      "!**/components/ui/**"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -11,7 +18,8 @@
   "assist": {
     "actions": {
       "source": {
-        "organizeImports": "on"
+        "organizeImports": "on",
+        "useSortedAttributes": "off"
       }
     }
   },
@@ -31,7 +39,7 @@
       },
       "nursery": {
         "useSortedClasses": {
-          "level": "warn",
+          "level": "error",
           "fix": "safe",
           "options": {
             "functions": ["clsx", "cva", "cn"]

@@ -1,7 +1,8 @@
 "use client";
+
 import Link from "next/link";
 
-export default function Header() {
+export function Header() {
   const links = [{ to: "/", label: "Home" }];
 
   return (
