@@ -4,7 +4,7 @@ import type { Metric } from "@metrifacts/api/schema";
 import { format, subDays } from "date-fns";
 import { TrendingDownIcon } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import {
   Card,
@@ -37,7 +37,7 @@ export function MetricCard(metric: Metric) {
   const chartConfig = {
     value: {
       label: metric.unit,
-      color: "hsl(var(--chart-1))",
+      color: "#4f46e5",
     },
   } satisfies ChartConfig;
 
@@ -102,8 +102,8 @@ export function MetricCard(metric: Metric) {
         {chartData.length === 0 ? (
           <MetricCardEmptyState />
         ) : (
-          <ChartContainer config={chartConfig} className="h-[200px] w-full">
-            <AreaChart
+          <ChartContainer config={chartConfig} className="h-[220px] w-full">
+            <LineChart
               accessibilityLayer
               data={chartData}
               margin={{ left: 12, right: 12 }}
@@ -117,30 +117,41 @@ export function MetricCard(metric: Metric) {
                 minTickGap={32}
                 tickFormatter={(value: string) =>
                   period === "24h"
-                    ? format(new Date(value), "HH:mm")
+                    ? format(new Date(value), "HH:mm a")
                     : format(new Date(value), "MMM d")
                 }
               />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                minTickGap={16}
+                tickFormatter={(value) =>
+                  metric.unit?.length && metric.unit.length < 3
+                    ? `${value.toLocaleString()}${metric.unit}`
+                    : value.toLocaleString()
+                }
+              />
               <ChartTooltip
+                cursor={false}
                 content={
                   <ChartTooltipContent
                     labelFormatter={(value) =>
                       period === "24h"
                         ? format(new Date(value), "HH:mm a")
-                        : format(new Date(value), "MMM d")
+                        : format(new Date(value), "MMM d, yyyy")
                     }
                   />
                 }
               />
-              <Area
+              <Line
                 dataKey="value"
-                type="linear"
-                fill="var(--color-value)"
-                fillOpacity={0.4}
+                type="natural"
                 stroke="var(--color-value)"
                 strokeWidth={2}
+                dot={false}
               />
-            </AreaChart>
+            </LineChart>
           </ChartContainer>
         )}
       </CardContent>
@@ -161,6 +172,7 @@ function MetricCardSkeleton() {
       <CardContent className="space-y-4">
         <Skeleton className="h-[200px] w-full" />
       </CardContent>
+      å
     </Card>
   );
 }
