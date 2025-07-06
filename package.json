@@ -15,7 +15,8 @@
     "db:push": "turbo -F @metrifacts/api db:push",
     "db:studio": "turbo -F @metrifacts/api db:studio",
     "db:generate": "turbo -F @metrifacts/api db:generate",
-    "db:migrate": "turbo -F server db:migrate"
+    "db:migrate": "turbo -F server db:migrate",
+    "db:seed": "turbo -F @metrifacts/api db:seed"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.6",
