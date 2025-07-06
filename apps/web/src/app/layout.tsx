@@ -5,7 +5,7 @@ import { Providers } from "@/app/providers";
 import { Header } from "@/components/header";
 import { cn } from "@/lib/utils";
 
-import "../index.css";
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
