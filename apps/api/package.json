@@ -1,7 +1,14 @@
 {
   "name": "@metrifacts/api",
+  "version": "0.0.1",
   "main": "src/index.ts",
+  "private": true,
   "type": "module",
+  "exports": {
+    "./db": "./prisma/index.ts",
+    "./routes": "./src/routes/metrics",
+    "./schema": "./src/schema.ts"
+  },
   "scripts": {
     "build": "tsc && tsc-alias",
     "check-types": "tsc --noEmit",

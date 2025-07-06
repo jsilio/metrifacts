@@ -8,8 +8,8 @@ export const MetricSchema = z.object({
   id: z.string().cuid(),
   name: z.string(),
   description: z.string().nullish(),
-  category: z.string().nullish().default("general"),
-  unit: z.string().nullish().default("count"),
+  category: z.string().nullish(),
+  unit: z.string().nullish(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });

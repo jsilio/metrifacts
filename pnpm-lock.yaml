@@ -55,45 +55,14 @@ importers:
         specifier: ^5.8.2
         version: 5.8.3
 
-  apps/server:
-    dependencies:
-      '@hono/node-server':
-        specifier: ^1.14.4
-        version: 1.15.0(hono@4.8.4)
-      '@prisma/client':
-        specifier: ^6.9.0
-        version: 6.11.1(prisma@6.11.1(typescript@5.8.3))(typescript@5.8.3)
-      dotenv:
-        specifier: ^16.4.7
-        version: 16.6.1
-      hono:
-        specifier: ^4.8.2
-        version: 4.8.4
-      zod:
-        specifier: ^3.25.16
-        version: 3.25.74
-    devDependencies:
-      '@types/node':
-        specifier: ^22.13.11
-        version: 22.16.0
-      prisma:
-        specifier: ^6.9.0
-        version: 6.11.1(typescript@5.8.3)
-      tsc-alias:
-        specifier: ^1.8.11
-        version: 1.8.16
-      tsx:
-        specifier: ^4.19.2
-        version: 4.20.3
-      typescript:
-        specifier: ^5.8.2
-        version: 5.8.3
-
   apps/web:
     dependencies:
       '@hookform/resolvers':
         specifier: ^5.1.1
         version: 5.1.1(react-hook-form@7.60.0(react@19.1.0))
+      '@metrifacts/api':
+        specifier: workspace:*
+        version: link:../api
       '@tanstack/react-query':
         specifier: ^5.80.5
         version: 5.81.5(react@19.1.0)

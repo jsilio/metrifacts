@@ -1,9 +1,9 @@
 "use client";
 
-import { ChartSplineIcon, PlusIcon } from "lucide-react";
+import { ChartSplineIcon } from "lucide-react";
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+import { AddMetricButton } from "@/components/metric-form";
 
 export function Header() {
   return (
@@ -19,10 +19,7 @@ export function Header() {
           </Link>
         </div>
 
-        <Button>
-          <PlusIcon />
-          Add metric
-        </Button>
+        <AddMetricButton />
       </nav>
     </header>
   );
