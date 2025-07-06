@@ -67,7 +67,7 @@ export function useCreateMetric({
 
       queryClient.setQueryData(queryKeys.metrics.detail(data.id), data);
 
-      toast.success(`Metric "${data.name}" created successfully!`);
+      toast.success(`Metric ${data.name} created successfully!`);
       onSuccess?.(data);
     },
     onError: (error) => {

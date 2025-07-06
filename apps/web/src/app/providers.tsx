@@ -10,7 +10,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={getQueryClient()}>
       {children}
 
-      <Toaster richColors closeButton className="pointer-events-auto" />
+      <Toaster closeButton className="pointer-events-auto" />
     </QueryClientProvider>
   );
 }

@@ -34,7 +34,6 @@ export const queryKeys = {
   },
 } as const;
 
-// API Functions
 export const getMetricEntries = async (
   metricId: string,
   params?: {
