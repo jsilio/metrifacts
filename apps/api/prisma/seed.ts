@@ -44,6 +44,14 @@ const metricsData = [
     trend: 0.98,
   },
   {
+    name: "Monthly recurring revenue",
+    description: "Predictable monthly revenue from subscriptions",
+    category: "business",
+    unit: "USD",
+    baseValue: 125_000,
+    trend: 1.08,
+  },
+  {
     name: "Daily revenue",
     description: "Revenue generated per day",
     category: "business",
