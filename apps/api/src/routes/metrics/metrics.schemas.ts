@@ -42,20 +42,7 @@ export type CreateMetricEntrySchema = z.infer<typeof CreateMetricEntrySchema>;
 export const UpdateMetricEntrySchema = MetricEntrySchema.partial();
 export type UpdateMetricEntrySchema = z.infer<typeof UpdateMetricEntrySchema>;
 
-export const MetricEntriesQuerySchema = z
-  .object({
-    limit: z.string().transform(Number).optional().default("100"),
-    from: z.string().datetime().optional(),
-    to: z.string().datetime().optional(),
-    order: z.enum(["asc", "desc"]).optional().default("asc"),
-  })
-  .refine(
-    (data) => {
-      if (data.from && data.to) {
-        return new Date(data.from) < new Date(data.to);
-      }
-
-      return true;
-    },
-    { message: "from date must be before to date" }
-  );
+export const MetricEntriesQuerySchema = z.object({
+  limit: z.coerce.number().positive().max(1000).optional().default(100),
+  order: z.enum(["asc", "desc"]).optional().default("asc"),
+});

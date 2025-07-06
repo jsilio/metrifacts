@@ -1,11 +1,11 @@
 "use client";
 
 import type { Metric } from "@metrifacts/api/schema";
-import { PencilIcon, TrendingDownIcon, TrendingUpIcon } from "lucide-react";
-import { useMemo } from "react";
+import { format, subDays } from "date-fns";
+import { TrendingDownIcon } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
-import { MetricChart } from "@/components/metric-chart";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,89 +13,169 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import type { ChartConfig } from "@/components/ui/chart";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useMetricEntries } from "@/hooks/use-entries";
-import { cn } from "@/lib/utils";
 
 export function MetricCard(metric: Metric) {
-  const { data: entries } = useMetricEntries(metric.id);
+  const [period, setPeriod] = useState("7d");
 
-  const trend = useMemo(() => {
-    if (!entries || entries.length < 2) {
-      return null;
+  const { data: entries, isLoading, error } = useMetricEntries(metric.id);
+
+  const chartConfig = {
+    value: {
+      label: metric.unit,
+      color: "hsl(var(--chart-1))",
+    },
+  } satisfies ChartConfig;
+
+  const chartData = useMemo(() => {
+    if (!entries?.length) {
+      return [];
     }
 
-    const first = entries[0].value;
-    const last = entries.at(-1)?.value;
-    const change = last ? last - first : 0;
-    const percentage = (change / first) * 100;
-
-    return {
-      change,
-      percentage,
-      isPositive: change >= 0,
+    const periodMap: Record<string, number> = {
+      "24h": 1,
+      "7d": 7,
+      "30d": 30,
     };
-  }, [entries]);
 
-  const latestValue = entries?.[entries.length - 1]?.value;
+    const cutoffDate = subDays(new Date(), periodMap[period] || 7);
+
+    return entries
+      .filter((entry) => new Date(entry.timestamp) >= cutoffDate)
+      .map((entry) => ({
+        date: entry.timestamp,
+        value: entry.value,
+      }));
+  }, [entries, period]);
+
+  if (isLoading) {
+    return <MetricCardSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <h2 className="font-semibold text-destructive text-xl">
+        Failed to load metrics: {error.message}
+      </h2>
+    );
+  }
 
   return (
-    <Card className="group relative h-full w-full transition-all hover:shadow-md">
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div className="flex-1 space-y-1">
-            <div className="flex items-center gap-2">
-              <CardTitle className="font-medium text-base">
-                {metric.name}
-              </CardTitle>
-            </div>
-
-            {metric.description && (
-              <CardDescription className="text-sm">
-                {metric.description}
-              </CardDescription>
-            )}
-
-            <div className="flex items-center gap-3 pt-1">
-              {latestValue !== undefined && (
-                <span className="font-semibold text-lg">
-                  {latestValue.toLocaleString()} {metric.unit}
-                </span>
-              )}
-
-              {trend && (
-                <div
-                  className={cn(
-                    "flex items-center gap-1 text-sm",
-                    trend.isPositive ? "text-green-600" : "text-red-600"
-                  )}
-                >
-                  {trend.isPositive ? (
-                    <TrendingUpIcon className="size-3" />
-                  ) : (
-                    <TrendingDownIcon className="size-3" />
-                  )}
-                  <span>
-                    {trend.isPositive ? "+" : ""}
-                    {trend.percentage.toFixed(1)}%
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <Button
-            variant="ghost"
-            size="sm"
-            className="opacity-0 transition-opacity group-hover:opacity-100"
-          >
-            <PencilIcon />
-          </Button>
+    <Card className="h-full">
+      <CardHeader className="flex justify-between">
+        <div>
+          <CardTitle className="text-base font-medium">{metric.name}</CardTitle>
+          {metric.description && (
+            <CardDescription className="text-sm">
+              {metric.description}
+            </CardDescription>
+          )}
         </div>
+
+        <Select value={period} onValueChange={setPeriod}>
+          <SelectTrigger className="w-36">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="24h">Last 24 hours</SelectItem>
+            <SelectItem value="7d">Last 7 days</SelectItem>
+            <SelectItem value="30d">Last 30 days</SelectItem>
+          </SelectContent>
+        </Select>
       </CardHeader>
 
-      <CardContent className="pt-0">
-        <MetricChart metric={metric} className="h-[180px] w-full" />
+      <CardContent className="space-y-4 mt-6">
+        {chartData.length === 0 ? (
+          <MetricCardEmptyState />
+        ) : (
+          <ChartContainer config={chartConfig} className="h-[200px] w-full">
+            <AreaChart
+              accessibilityLayer
+              data={chartData}
+              margin={{ left: 12, right: 12 }}
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                minTickGap={32}
+                tickFormatter={(value: string) =>
+                  period === "24h"
+                    ? format(new Date(value), "HH:mm")
+                    : format(new Date(value), "MMM d")
+                }
+              />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    labelFormatter={(value) =>
+                      period === "24h"
+                        ? format(new Date(value), "HH:mm a")
+                        : format(new Date(value), "MMM d")
+                    }
+                  />
+                }
+              />
+              <Area
+                dataKey="value"
+                type="linear"
+                fill="var(--color-value)"
+                fillOpacity={0.4}
+                stroke="var(--color-value)"
+                strokeWidth={2}
+              />
+            </AreaChart>
+          </ChartContainer>
+        )}
       </CardContent>
     </Card>
+  );
+}
+
+function MetricCardSkeleton() {
+  return (
+    <Card className="h-full">
+      <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
+        <div className="space-y-1">
+          <Skeleton className="h-5 w-32" />
+          <Skeleton className="h-4 w-48" />
+        </div>
+        <Skeleton className="h-9 w-36" />
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <Skeleton className="h-[200px] w-full" />
+      </CardContent>
+    </Card>
+  );
+}
+
+function MetricCardEmptyState() {
+  return (
+    <div className="flex h-[200px] flex-col items-center justify-center rounded-lg bg-slate-50 text-center">
+      <div className="mb-4 rounded-full bg-slate-200 p-3">
+        <TrendingDownIcon className="size-6 text-slate-600 " />
+      </div>
+
+      <h3 className="text-sm font-medium">No data available</h3>
+      <p className="text-xs text-muted-foreground">
+        Try selecting a different time period
+      </p>
+    </div>
   );
 }

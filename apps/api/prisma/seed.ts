@@ -23,15 +23,15 @@ const metricsData = [
     name: "User retention",
     description: "Users returning after 7 days",
     category: "user-engagement",
-    unit: "percentage",
+    unit: "%",
     baseValue: 65,
     trend: 1.01,
   },
   {
     name: "API response time",
-    description: "average api response time",
+    description: "Average API response time",
     category: "performance",
-    unit: "milliseconds",
+    unit: "ms",
     baseValue: 150,
     trend: 0.99,
   },
@@ -39,7 +39,7 @@ const metricsData = [
     name: "Error rate",
     description: "Failed requests percentage",
     category: "performance",
-    unit: "percentage",
+    unit: "%",
     baseValue: 3,
     trend: 0.98,
   },
@@ -47,7 +47,7 @@ const metricsData = [
     name: "Daily revenue",
     description: "Revenue generated per day",
     category: "business",
-    unit: "dollars",
+    unit: "USD",
     baseValue: 15_000,
     trend: 1.03,
   },
@@ -55,7 +55,7 @@ const metricsData = [
     name: "Conversion rate",
     description: "Visitors who sign up",
     category: "business",
-    unit: "percentage",
+    unit: "%",
     baseValue: 4,
     trend: 1.005,
   },
@@ -82,26 +82,42 @@ async function main() {
 
   console.log(`✅ Created ${metrics.length} metrics`);
 
-  const today = new Date();
-  const startDate = new Date(today);
-  startDate.setDate(today.getDate() - 30);
+  const now = new Date();
 
   const allEntryPromises = metrics.map((metric, i) => {
     const config = metricsData[i];
-
     const entries: Array<{
       metricId: string;
       value: number;
       timestamp: Date;
     }> = [];
 
-    for (let day = 0; day < 30; day++) {
-      const date = new Date(startDate);
-      date.setDate(startDate.getDate() + day);
+    for (let hour = 23; hour >= 0; hour--) {
+      const date = new Date(now);
+      date.setHours(date.getHours() - hour);
+      date.setMinutes(0);
+      date.setSeconds(0);
+      date.setMilliseconds(0);
 
-      const trendMultiplier = config.trend ** day;
-      const randomness = 0.9 + Math.random() * 0.2;
-      const value = config.baseValue * trendMultiplier * randomness;
+      const hourlyTrend = config.trend ** (hour / 24);
+      const randomness = 0.8 + Math.random() * 0.4;
+      const value = config.baseValue * hourlyTrend * randomness;
+
+      entries.push({
+        metricId: metric.id,
+        value: Math.round(value * 100) / 100,
+        timestamp: date,
+      });
+    }
+
+    for (let day = 30; day >= 1; day--) {
+      const date = new Date(now);
+      date.setDate(date.getDate() - day);
+      date.setHours(12, 0, 0, 0);
+
+      const dailyTrend = config.trend ** day;
+      const randomness = 0.85 + Math.random() * 0.3;
+      const value = config.baseValue * dailyTrend * randomness;
 
       entries.push({
         metricId: metric.id,
@@ -115,7 +131,8 @@ async function main() {
 
   await Promise.all(allEntryPromises);
 
-  console.log("✅ Generated 30 days of data for each metric");
+  console.log("✅ Generated hourly data for last 24 hours");
+  console.log("✅ Generated daily data for last 30 days");
   console.log("🎉 Seed completed! Your dashboard is ready.");
 }
 

@@ -10,14 +10,14 @@ type MetricListProps = {
 
 export function MetricList({ category = "general", metrics }: MetricListProps) {
   return (
-    <section className="space-y-8">
+    <section className="space-y-6">
       <h2 className="border-border border-b pb-2 font-semibold text-xl capitalize">
         {category.split("-").join(" ")}
       </h2>
 
       <ul
         className={cn(
-          "grid items-stretch gap-4",
+          "grid items-stretch gap-10",
           metrics.length === 1 && " grid-cols-1",
           metrics.length === 2 && "grid-cols-2",
           metrics.length >= 3 && "grid-cols-2"

@@ -21,8 +21,6 @@ export const queryKeys = {
       metricId: string,
       params?: {
         limit?: number;
-        from?: string;
-        to?: string;
         order?: "asc" | "desc";
       }
     ) =>
@@ -41,8 +39,6 @@ export const getMetricEntries = async (
   metricId: string,
   params?: {
     limit?: number;
-    from?: string;
-    to?: string;
     order?: "asc" | "desc";
   }
 ): Promise<MetricEntry[]> => {
@@ -51,26 +47,38 @@ export const getMetricEntries = async (
   if (params?.limit) {
     searchParams.set("limit", params.limit.toString());
   }
-  if (params?.from) {
-    searchParams.set("from", params.from);
-  }
-  if (params?.to) {
-    searchParams.set("to", params.to);
-  }
   if (params?.order) {
     searchParams.set("order", params.order);
   }
 
   const query = searchParams.toString();
-  const response = await fetch(
-    `${API_BASE_URL}/metrics/${metricId}/entries${query ? `?${query}` : ""}`
-  );
+  const url = `${API_BASE_URL}/metrics/${metricId}/entries${
+    query ? `?${query}` : ""
+  }`;
+
+  console.log("API Request:", {
+    url,
+    params,
+    metricId,
+  });
+
+  const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error("Failed to fetch metric entries");
+    const errorText = await response.text();
+    console.error("API Error:", {
+      status: response.status,
+      statusText: response.statusText,
+      error: errorText,
+    });
+    throw new Error(
+      `Failed to fetch metric entries: ${response.status} ${errorText}`
+    );
   }
 
-  return response.json();
+  const data = await response.json();
+  console.log("API Response:", data);
+  return data;
 };
 
 export const createMetricEntry = async (
@@ -97,8 +105,6 @@ export const metricEntriesQueryOptions = (
   metricId: string,
   params?: {
     limit?: number;
-    from?: string;
-    to?: string;
     order?: "asc" | "desc";
   }
 ) =>
@@ -112,8 +118,6 @@ export function useMetricEntries(
   metricId: string,
   params?: {
     limit?: number;
-    from?: string;
-    to?: string;
     order?: "asc" | "desc";
   }
 ) {

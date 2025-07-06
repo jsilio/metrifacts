@@ -34,19 +34,12 @@ router.get(
   zValidator("query", MetricEntriesQuerySchema),
   async (c) => {
     const { id } = c.req.valid("param");
-    const { limit, from, to, order = "asc" } = c.req.valid("query");
+    const { limit, order = "asc" } = c.req.valid("query");
 
     const entries = await db.metricEntry.findMany({
       where: {
         metricId: id,
-        ...((from || to) && {
-          timestamp: {
-            ...(from && { gte: new Date(from) }),
-            ...(to && { lte: new Date(to) }),
-          },
-        }),
       },
-      include: { metric: true },
       orderBy: { timestamp: order },
       take: limit,
     });
