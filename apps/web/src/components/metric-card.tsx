@@ -115,7 +115,7 @@ export function MetricCard(metric: Metric) {
 
       <CardContent className="space-y-4 mt-6">
         {chartData.length === 0 ? (
-          <EmptyState metric={metric} />
+          <EmptyState metric={metric} hasData={Boolean(entries?.length)} />
         ) : (
           <ChartContainer config={chartConfig} className="h-[220px] w-full">
             <LineChart
@@ -193,7 +193,7 @@ function MetricCardSkeleton() {
   );
 }
 
-function EmptyState({ metric }: { metric: Metric }) {
+function EmptyState({ metric, hasData }: { metric: Metric; hasData: boolean }) {
   const bulkCreateMutation = useBulkCreateEntries();
 
   const handlePopulate = () => {
@@ -210,7 +210,9 @@ function EmptyState({ metric }: { metric: Metric }) {
       <div>
         <h3 className="text-sm font-medium">No data available</h3>
         <p className="text-xs text-muted-foreground">
-          Get started by adding your first entry
+          {hasData
+            ? "Try selecting a different time period or add new entries"
+            : "Get started by adding your first entry"}
         </p>
       </div>
 

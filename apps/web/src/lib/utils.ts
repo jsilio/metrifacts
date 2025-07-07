@@ -30,8 +30,23 @@ export function generateSampleEntries(metric: Metric) {
   const entries: CreateMetricEntrySchema[] = [];
   const now = new Date();
 
-  const baseValue = metric.unit === "$" ? 10_000 : 60;
-  const trend = Math.random() > 0.5 ? 1.02 : 0.98;
+  const baseValue = metric.unit === "$" ? 10_000 : 80;
+  const trend = Math.random() > 0.5 ? 1.05 : 0.95;
+
+  for (let hour = 23; hour >= 0; hour--) {
+    const date = new Date(now);
+    date.setHours(date.getHours() - hour, 0, 0, 0);
+
+    const hourlyTrend = trend ** (hour / 24);
+    const randomness = 0.8 + Math.random() * 0.4;
+    const value = baseValue * hourlyTrend * randomness;
+
+    entries.push({
+      metricId: metric.id,
+      value: Math.round(value * 100) / 100,
+      timestamp: date.toISOString(),
+    });
+  }
 
   for (let day = 30; day >= 1; day--) {
     const date = new Date(now);
