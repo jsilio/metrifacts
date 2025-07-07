@@ -87,7 +87,7 @@ export function MetricCard(metric: Metric) {
 
   return (
     <Card className="h-full">
-      <CardHeader className="flex justify-between">
+      <CardHeader className="flex flex-col lg:flex-row gap-4 justify-between">
         <div>
           <CardTitle className="text-base font-medium">{metric.name}</CardTitle>
           {metric.description && (
@@ -121,7 +121,7 @@ export function MetricCard(metric: Metric) {
             <LineChart
               accessibilityLayer
               data={chartData}
-              margin={{ left: 12, right: 12 }}
+              margin={{ right: 12 }}
             >
               <CartesianGrid vertical={false} />
               <XAxis
