@@ -5,8 +5,8 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./client": "./src/client.ts",
     "./db": "./prisma/index.ts",
-    "./routes": "./src/routes/metrics",
     "./schema": "./src/schema.ts"
   },
   "scripts": {

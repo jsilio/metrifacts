@@ -1,10 +1,12 @@
 "use client";
 
 import type { Metric } from "@metrifacts/api/schema";
+import { useQuery } from "@tanstack/react-query";
 import { format, subDays } from "date-fns";
 import { TrendingDownIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+
 import { AddEntryButton } from "@/components/add-entry-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,11 +30,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useBulkCreateEntries, useMetricEntries } from "@/hooks/use-entries";
+import {
+  metricEntriesQueryOptions,
+  useBulkCreateEntries,
+} from "@/hooks/use-entries";
 import { generateSampleEntries } from "@/lib/utils";
 
 export function MetricCard(metric: Metric) {
-  const { data: entries, isLoading, error } = useMetricEntries(metric.id);
+  const {
+    data: entries,
+    isLoading,
+    error,
+  } = useQuery(metricEntriesQueryOptions(metric.id));
 
   const [period, setPeriod] = useState("30d");
 

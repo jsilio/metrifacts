@@ -5,115 +5,39 @@ import type {
 import {
   queryOptions,
   useMutation,
-  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { queryKeys as metricQueryKeys } from "./use-metrics";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+import { client } from "@/lib/api-client";
 
 export const queryKeys = {
-  entries: {
-    all: (metricId: string) => ["metrics", metricId, "entries"] as const,
-    list: (
-      metricId: string,
-      params?: {
-        limit?: number;
-        order?: "asc" | "desc";
-      }
-    ) =>
-      [
-        "metrics",
-        metricId,
-        "entries",
-        "list",
-        ...(params ? [params] : []),
-      ] as const,
-  },
+  entries: (metricId: string) => ["entries", metricId] as const,
 } as const;
 
 export const getMetricEntries = async (
   metricId: string,
-  params?: {
-    limit?: number;
-    order?: "asc" | "desc";
-  }
-): Promise<MetricEntry[]> => {
-  const searchParams = new URLSearchParams();
-
-  if (params?.limit) {
-    searchParams.set("limit", params.limit.toString());
-  }
-  if (params?.order) {
-    searchParams.set("order", params.order);
-  }
-
-  const query = searchParams.toString();
-  const url = `${API_BASE_URL}/metrics/${metricId}/entries${
-    query ? `?${query}` : ""
-  }`;
-
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    const errorText = await response.text();
-
-    throw new Error(
-      `Failed to fetch metric entries: ${response.status} ${errorText}`
-    );
-  }
-
-  const data = await response.json();
-
-  return data;
-};
-
-export const createMetricEntry = async (
-  entry: CreateMetricEntrySchema
-): Promise<MetricEntry> => {
-  const response = await fetch(
-    `${API_BASE_URL}/metrics/${entry.metricId}/entries`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(entry),
-    }
-  );
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(error || "Failed to create metric entry");
-  }
+  params?: { limit?: string; order?: "asc" | "desc" }
+) => {
+  const response = await client.api.metrics[":id"].entries.$get({
+    param: { id: metricId },
+    query: {
+      ...(params || {}),
+    },
+  });
 
   return response.json();
 };
 
 export const metricEntriesQueryOptions = (
   metricId: string,
-  params?: {
-    limit?: number;
-    order?: "asc" | "desc";
-  }
+  params?: { limit?: string; order?: "asc" | "desc" }
 ) =>
   queryOptions({
-    queryKey: queryKeys.entries.list(metricId, params),
+    queryKey: queryKeys.entries(metricId),
     queryFn: () => getMetricEntries(metricId, params),
     enabled: !!metricId,
   });
-
-export function useMetricEntries(
-  metricId: string,
-  params?: {
-    limit?: number;
-    order?: "asc" | "desc";
-  }
-) {
-  return useQuery(metricEntriesQueryOptions(metricId, params));
-}
 
 export function useCreateMetricEntry({
   onSuccess,
@@ -123,23 +47,23 @@ export function useCreateMetricEntry({
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateMetricEntrySchema) => {
-      return createMetricEntry(data);
-    },
-    onSuccess: (data, { metricId }) => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.entries.all(metricId),
+    mutationFn: async (entry: CreateMetricEntrySchema) => {
+      const response = await client.api.metrics[":id"].entries.$post({
+        param: { id: entry.metricId },
+        json: entry,
       });
 
+      return response.json();
+    },
+    onSuccess: (entry, { metricId }) => {
       queryClient.invalidateQueries({
-        queryKey: metricQueryKeys.metrics.detail(metricId),
+        queryKey: queryKeys.entries(metricId),
       });
 
-      toast.success("Metric entry added successfully!");
-      onSuccess?.(data);
+      toast.success("Entry added successfully!");
+      onSuccess?.(entry);
     },
-    onError: (error) =>
-      toast.error(error.message || "Failed to add metric entry"),
+    onError: (error) => toast.error(error.message || "Failed to add entry"),
   });
 }
 
@@ -152,21 +76,29 @@ export function useBulkCreateEntries({
 
   return useMutation({
     mutationFn: (entries: CreateMetricEntrySchema[]) => {
-      const promises = entries.map((entry) => createMetricEntry(entry));
+      const promises = entries.map((entry) =>
+        client.api.metrics[":id"].entries
+          .$post({
+            param: { id: entry.metricId },
+            json: entry,
+          })
+          .then((res) => res.json())
+      );
       return Promise.all(promises);
     },
-    onSuccess: (entries) => {
-      const metricId = entries[0]?.metricId;
+    onSuccess: (_, entries) => {
+      const metricId = entries.at(0)?.metricId;
 
       if (metricId) {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.entries.all(metricId),
+          queryKey: queryKeys.entries(metricId),
         });
       }
 
-      toast.success(`${entries.length} entries added successfully!`);
+      toast.success("Sample data added successfully!");
       onSuccess?.();
     },
-    onError: (error) => toast.error(error.message || "Failed to add entries"),
+    onError: (error) =>
+      toast.error(error.message || "Failed to add sample data"),
   });
 }
