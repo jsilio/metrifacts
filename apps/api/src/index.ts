@@ -1,6 +1,5 @@
 import "dotenv/config";
 import { serve } from "@hono/node-server";
-import { handle } from "@hono/node-server/vercel";
 import { Hono } from "hono";
 import { showRoutes } from "hono/dev";
 import { logger } from "hono/logger";
@@ -27,19 +26,18 @@ app.get("/", (c) => c.json({ message: "Metrifacts API", status: "ok" }));
 
 const router = app.route("/metrics", metricsRoutes);
 
-if (process.env.NODE_ENV !== "production") {
-  showRoutes(app);
-  serve(
-    {
-      fetch: app.fetch,
-      port: 3000,
-    },
-    (info) => {
-      console.log(`Server is running on http://localhost:${info.port}`);
-    }
-  );
-}
+showRoutes(app);
 
-export default handle(app);
+const port = Number(process.env.PORT) || 3000;
+
+serve(
+  {
+    fetch: app.fetch,
+    port,
+  },
+  (info) => {
+    console.log(`Server is running on http://localhost:${info.port}`);
+  }
+);
 
 export type AppType = typeof router;

@@ -13,7 +13,6 @@
     "prebuild": "prisma generate --schema ./prisma/schema",
     "build": "tsc && tsc-alias",
     "check-types": "tsc --noEmit",
-    "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
     "dev": "tsx watch src/index.ts",
     "start": "node dist/src/index.js",
     "db:push": "prisma db push --schema ./prisma/schema",
