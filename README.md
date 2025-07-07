@@ -2,6 +2,13 @@
 
 A full-stack metrics tracking application that enables users to create, monitor, and visualize key performance indicators in real-time.
 
+## 🚀 Demo
+
+Try the live application:
+
+- **Web App**: [https://metrifacts.vercel.app](https://metrifacts.vercel.app)
+- **API**: [https://metrifacts.onrender.com/api](https://metrifacts.onrender.com/api)
+
 ## Project Overview
 
 This project is a monorepo built with modern TypeScript tooling (Next.js, Hono, Prisma, TailwindCSS, shadcn/ui). It uses **Turborepo** for monorepo orchestration and **pnpm workspaces** for efficient dependency management. Users can create custom metrics, log timestamped data points, and visualize trends with interactive charts powered by Recharts.
