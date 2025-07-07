@@ -5,9 +5,18 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./client": "./src/client.ts",
-    "./db": "./prisma/index.ts",
-    "./schema": "./src/schema.ts"
+    "./client": {
+      "development": "./src/client.ts",
+      "default": "./dist/src/client.js"
+    },
+    "./db": {
+      "development": "./prisma/index.ts",
+      "default": "./dist/prisma/index.js"
+    },
+    "./schema": {
+      "development": "./src/schema.ts",
+      "default": "./dist/src/schema.js"
+    }
   },
   "scripts": {
     "prebuild": "prisma generate --schema ./prisma/schema",
