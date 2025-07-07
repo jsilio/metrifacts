@@ -1,7 +1,6 @@
 import { randomUUID } from "node:crypto";
+import { Prisma } from "@metrifacts/api/db";
 import z, { ZodError } from "zod";
-
-import { Prisma } from "@/db";
 
 import * as HttpStatusPhrases from "./http-status-phrases";
 

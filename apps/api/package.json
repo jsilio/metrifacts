@@ -10,6 +10,7 @@
     "./schema": "./src/schema.ts"
   },
   "scripts": {
+    "prebuild": "prisma generate --schema ./prisma/schema",
     "build": "tsc && tsc-alias",
     "check-types": "tsc --noEmit",
     "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
