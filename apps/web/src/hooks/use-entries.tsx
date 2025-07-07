@@ -138,8 +138,35 @@ export function useCreateMetricEntry({
       toast.success("Metric entry added successfully!");
       onSuccess?.(data);
     },
-    onError: (error) => {
-      toast.error(error.message || "Failed to add metric entry");
+    onError: (error) =>
+      toast.error(error.message || "Failed to add metric entry"),
+  });
+}
+
+export function useBulkCreateEntries({
+  onSuccess,
+}: {
+  onSuccess?: () => void;
+} = {}) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (entries: CreateMetricEntrySchema[]) => {
+      const promises = entries.map((entry) => createMetricEntry(entry));
+      return Promise.all(promises);
     },
+    onSuccess: (entries) => {
+      const metricId = entries[0]?.metricId;
+
+      if (metricId) {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.entries.all(metricId),
+        });
+      }
+
+      toast.success(`${entries.length} entries added successfully!`);
+      onSuccess?.();
+    },
+    onError: (error) => toast.error(error.message || "Failed to add entries"),
   });
 }

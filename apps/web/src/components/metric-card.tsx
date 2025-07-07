@@ -6,6 +6,7 @@ import { TrendingDownIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import { AddEntryButton } from "@/components/add-entry-form";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -27,7 +28,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMetricEntries } from "@/hooks/use-entries";
+import { useBulkCreateEntries, useMetricEntries } from "@/hooks/use-entries";
+import { generateSampleEntries } from "@/lib/utils";
 
 export function MetricCard(metric: Metric) {
   const { data: entries, isLoading, error } = useMetricEntries(metric.id);
@@ -184,8 +186,15 @@ function MetricCardSkeleton() {
 }
 
 function EmptyState({ metric }: { metric: Metric }) {
+  const bulkCreateMutation = useBulkCreateEntries();
+
+  const handlePopulate = () => {
+    const sampleEntries = generateSampleEntries(metric);
+    bulkCreateMutation.mutate(sampleEntries);
+  };
+
   return (
-    <div className="flex h-[200px] space-y-4 flex-col items-center justify-center rounded-lg bg-slate-50 text-center">
+    <div className="flex h-56 space-y-5 flex-col items-center justify-center rounded-lg bg-slate-50 text-center">
       <div className="rounded-full bg-slate-200 p-3">
         <TrendingDownIcon className="size-6 text-slate-600 " />
       </div>
@@ -197,7 +206,18 @@ function EmptyState({ metric }: { metric: Metric }) {
         </p>
       </div>
 
-      <AddEntryButton metric={metric} />
+      <div className="flex gap-2">
+        <Button
+          onClick={handlePopulate}
+          disabled={bulkCreateMutation.isPending}
+        >
+          {bulkCreateMutation.isPending
+            ? "Adding..."
+            : "Populate with sample data"}
+        </Button>
+
+        <AddEntryButton metric={metric} />
+      </div>
     </div>
   );
 }
