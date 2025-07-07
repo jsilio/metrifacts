@@ -43,7 +43,7 @@ This project uses PostgreSQL with Prisma. You can either use a local PostgreSQL 
 
 **Quick setup with Neon**
 
-1. Create a new PostgreSQL database at [neon.new/db](https://neon.new/db)
+1. Create a new PostgreSQL database at [neon.new/db](https://neon.new/db) (You don't need to create an account)
 2. Copy the connection string and set it in the `.env` file in the `apps/api` directory:
 
 **Setup:**
