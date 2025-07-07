@@ -1,20 +1,11 @@
 {
-  "builds": [
-    {
-      "src": "apps/api/src/index.ts",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["apps/api/prisma/**"]
-      }
-    }
-  ],
   "env": {
     "NODEJS_HELPERS": "0"
   },
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/api"
+      "destination": "/apps/api/src/index.ts"
     }
   ]
 }
