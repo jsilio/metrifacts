@@ -1,11 +1,16 @@
 {
-  "env": {
-    "NODEJS_HELPERS": "0"
+  "functions": {
+    "src/index.ts": {
+      "runtime": "nodejs18.x"
+    }
   },
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/apps/api/src/index.ts"
+      "destination": "/src/index.ts"
     }
-  ]
+  ],
+  "env": {
+    "NODEJS_HELPERS": "0"
+  }
 }
