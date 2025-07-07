@@ -13,8 +13,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { ChartConfig } from "@/components/ui/chart";
 import {
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -30,16 +30,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useMetricEntries } from "@/hooks/use-entries";
 
 export function MetricCard(metric: Metric) {
-  const [period, setPeriod] = useState("7d");
-
   const { data: entries, isLoading, error } = useMetricEntries(metric.id);
 
-  const chartConfig = {
-    value: {
-      label: metric.unit,
-      color: "#4f46e5",
-    },
-  } satisfies ChartConfig;
+  const [period, setPeriod] = useState("7d");
 
   const chartData = useMemo(() => {
     if (!entries?.length) {
@@ -61,6 +54,13 @@ export function MetricCard(metric: Metric) {
         value: entry.value,
       }));
   }, [entries, period]);
+
+  const chartConfig = {
+    value: {
+      label: metric.unit,
+      color: "#4f46e5",
+    },
+  } satisfies ChartConfig;
 
   if (isLoading) {
     return <MetricCardSkeleton />;
@@ -100,7 +100,7 @@ export function MetricCard(metric: Metric) {
 
       <CardContent className="space-y-4 mt-6">
         {chartData.length === 0 ? (
-          <MetricCardEmptyState />
+          <EmptyState />
         ) : (
           <ChartContainer config={chartConfig} className="h-[220px] w-full">
             <LineChart
@@ -127,9 +127,11 @@ export function MetricCard(metric: Metric) {
                 tickMargin={8}
                 minTickGap={16}
                 tickFormatter={(value) =>
-                  metric.unit?.length && metric.unit.length < 3
-                    ? `${value.toLocaleString()}${metric.unit}`
-                    : value.toLocaleString()
+                  new Intl.NumberFormat("en", {
+                    notation: "compact",
+                    style: metric.unit === "$" ? "currency" : "decimal",
+                    currency: "USD",
+                  }).format(value) + (metric.unit === "%" ? "%" : "")
                 }
               />
               <ChartTooltip
@@ -177,7 +179,7 @@ function MetricCardSkeleton() {
   );
 }
 
-function MetricCardEmptyState() {
+function EmptyState() {
   return (
     <div className="flex h-[200px] flex-col items-center justify-center rounded-lg bg-slate-50 text-center">
       <div className="mb-4 rounded-full bg-slate-200 p-3">
