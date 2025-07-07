@@ -27,9 +27,8 @@ app.get("/", (c) => c.json({ message: "Metrifacts API", status: "ok" }));
 
 const router = app.route("/metrics", metricsRoutes);
 
-showRoutes(app);
-
 if (process.env.NODE_ENV !== "production") {
+  showRoutes(app);
   serve(
     {
       fetch: app.fetch,
