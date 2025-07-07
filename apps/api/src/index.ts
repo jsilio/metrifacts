@@ -10,6 +10,12 @@ import { cors } from "./middlewares/cors";
 import { onError } from "./middlewares/on-error";
 import { metricsRoutes } from "./routes/metrics/metrics.routes";
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 const app = new Hono().basePath("/api");
 
 app.use("/*", cors());
