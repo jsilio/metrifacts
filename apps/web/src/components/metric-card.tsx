@@ -189,7 +189,6 @@ function MetricCardSkeleton() {
       <CardContent className="space-y-4">
         <Skeleton className="h-[200px] w-full" />
       </CardContent>
-      å
     </Card>
   );
 }
