@@ -7,9 +7,9 @@ export const IdParamsSchema = z.object({
 export const MetricSchema = z.object({
   id: z.string().cuid(),
   name: z.string().min(1, "Name is required"),
-  description: z.string().optional(),
-  category: z.string().optional(),
-  unit: z.string().optional(),
+  description: z.string().nullable().optional(),
+  category: z.string().nullable().optional(),
+  unit: z.string().nullable().optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });

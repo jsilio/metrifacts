@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { prisma as db } from "@metrifacts/api/db";
 import { Hono } from "hono";
 
-import * as HttpStatusCodes from "@/lib/http-status-codes";
+import * as HttpStatusCodes from "../../lib/http-status-codes";
 
 import {
   CreateMetricEntrySchema,

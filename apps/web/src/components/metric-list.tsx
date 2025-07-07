@@ -12,7 +12,7 @@ export function MetricList({ category = "general", metrics }: MetricListProps) {
   return (
     <section className="space-y-6">
       <h2 className="border-border border-b pb-2 font-semibold text-xl capitalize">
-        {category.split("-").join(" ")}
+        {category?.split("-").join(" ")}
       </h2>
 
       <ul

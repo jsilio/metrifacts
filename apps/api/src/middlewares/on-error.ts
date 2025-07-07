@@ -1,8 +1,8 @@
 import type { ErrorHandler } from "hono";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
 
-import { createErrorResponse } from "@/lib/errors";
-import * as HttpStatusCodes from "@/lib/http-status-codes";
+import { createErrorResponse } from "../lib/errors";
+import * as HttpStatusCodes from "../lib/http-status-codes";
 
 export const onError: ErrorHandler = (error, c) => {
   const requestId = c.get("requestId");

@@ -5,9 +5,9 @@ import { showRoutes } from "hono/dev";
 import { logger } from "hono/logger";
 import { requestId } from "hono/request-id";
 
-import { cors } from "@/middlewares/cors";
-import { onError } from "@/middlewares/on-error";
-import { metricsRoutes } from "@/routes/metrics/metrics.routes";
+import { cors } from "./middlewares/cors";
+import { onError } from "./middlewares/on-error";
+import { metricsRoutes } from "./routes/metrics/metrics.routes";
 
 const app = new Hono().basePath("/api");
 

@@ -90,6 +90,7 @@ export function MetricForm({ onCancel, onSuccess }: MetricFormProps) {
                 <Textarea
                   placeholder="Number of unique users who logged in today"
                   {...field}
+                  value={field.value ?? ""}
                 />
               </FormControl>
               <FormMessage />
@@ -103,7 +104,7 @@ export function MetricForm({ onCancel, onSuccess }: MetricFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Category</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
+              <Select onValueChange={field.onChange} value={field.value ?? ""}>
                 <FormControl>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select a category" />
