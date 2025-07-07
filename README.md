@@ -6,21 +6,22 @@ A full-stack metrics tracking application that enables users to create, monitor,
 
 This project is a monorepo built with modern TypeScript tooling (Next.js, Hono, Prisma, TailwindCSS, shadcn/ui). It uses **Turborepo** for monorepo orchestration and **pnpm workspaces** for efficient dependency management. Users can create custom metrics, log timestamped data points, and visualize trends with interactive charts powered by Recharts.
 
-### Tech Stack
+### Architecture
 
-- **TypeScript** - For type safety and improved developer experience
-- **Next.js** - Full-stack React framework
-- **React Query** - Async state management and caching
-- **React Hook Form** - Form handling with validation
-- **Recharts** - Interactive charts and data visualization
-- **TailwindCSS** - Utility-first CSS for rapid UI development
-- **shadcn/ui** - Reusable UI components
-- **Hono** - Lightweight, performant server framework
-- **Node.js** - Runtime environment
-- **Prisma** - TypeScript-first ORM
-- **PostgreSQL** - Database engine
-- **Biome** - Linting and formatting
-- **Turborepo** - Optimized monorepo build system
+- **Frontend (`apps/web`)**:  
+  Built with Next.js, using React Query for async state management and React Hook Form for form state. Communicates with the backend via a shared API client for type-safe data fetching.
+
+- **Backend (`apps/api`)**:  
+  Built with Hono and Prisma, using PostgreSQL database.  
+  Exposes REST endpoints for:
+
+  - Creating and retrieving metrics
+  - Adding timestamped entries
+  - Enforcing data validation with Zod schemas
+
+- **Database**:  
+  PostgreSQL with Prisma ORM, designed for flexible metric tracking with categorization.  
+  Includes comprehensive seed data with realistic business, user engagement, and performance metrics.
 
 ## Getting Started
 
@@ -97,20 +98,3 @@ metrifacts/
 │           ├── seed.ts        # Sample data generator
 │           └── generated/     # Generated Prisma client
 ```
-
-## Architecture Overview
-
-- **Frontend (`apps/web`)**:  
-  Built with Next.js, using React Query for async state management and React Hook Form for form state. Communicates with the backend via a shared API client for type-safe data fetching.
-
-- **Backend (`apps/api`)**:  
-  Built with Hono and Prisma, using PostgreSQL database.  
-  Exposes REST endpoints for:
-
-  - Creating and retrieving metrics
-  - Adding timestamped entries
-  - Enforcing data validation with Zod schemas
-
-- **Database**:  
-  PostgreSQL with Prisma ORM, designed for flexible metric tracking with categorization.  
-  Includes comprehensive seed data with realistic business, user engagement, and performance metrics.
