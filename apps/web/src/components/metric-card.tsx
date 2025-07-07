@@ -5,7 +5,7 @@ import { format, subDays } from "date-fns";
 import { TrendingDownIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
-
+import { AddEntryButton } from "@/components/add-entry-form";
 import {
   Card,
   CardContent,
@@ -32,7 +32,7 @@ import { useMetricEntries } from "@/hooks/use-entries";
 export function MetricCard(metric: Metric) {
   const { data: entries, isLoading, error } = useMetricEntries(metric.id);
 
-  const [period, setPeriod] = useState("7d");
+  const [period, setPeriod] = useState("30d");
 
   const chartData = useMemo(() => {
     if (!entries?.length) {
@@ -86,21 +86,25 @@ export function MetricCard(metric: Metric) {
           )}
         </div>
 
-        <Select value={period} onValueChange={setPeriod}>
-          <SelectTrigger className="w-36">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="24h">Last 24 hours</SelectItem>
-            <SelectItem value="7d">Last 7 days</SelectItem>
-            <SelectItem value="30d">Last 30 days</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-2">
+          <AddEntryButton metric={metric} />
+
+          <Select value={period} onValueChange={setPeriod}>
+            <SelectTrigger className="w-36">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="24h">Last 24 hours</SelectItem>
+              <SelectItem value="7d">Last 7 days</SelectItem>
+              <SelectItem value="30d">Last 30 days</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </CardHeader>
 
       <CardContent className="space-y-4 mt-6">
         {chartData.length === 0 ? (
-          <EmptyState />
+          <EmptyState metric={metric} />
         ) : (
           <ChartContainer config={chartConfig} className="h-[220px] w-full">
             <LineChart
@@ -179,17 +183,21 @@ function MetricCardSkeleton() {
   );
 }
 
-function EmptyState() {
+function EmptyState({ metric }: { metric: Metric }) {
   return (
-    <div className="flex h-[200px] flex-col items-center justify-center rounded-lg bg-slate-50 text-center">
-      <div className="mb-4 rounded-full bg-slate-200 p-3">
+    <div className="flex h-[200px] space-y-4 flex-col items-center justify-center rounded-lg bg-slate-50 text-center">
+      <div className="rounded-full bg-slate-200 p-3">
         <TrendingDownIcon className="size-6 text-slate-600 " />
       </div>
 
-      <h3 className="text-sm font-medium">No data available</h3>
-      <p className="text-xs text-muted-foreground">
-        Try selecting a different time period
-      </p>
+      <div>
+        <h3 className="text-sm font-medium">No data available</h3>
+        <p className="text-xs text-muted-foreground">
+          Get started by adding your first entry
+        </p>
+      </div>
+
+      <AddEntryButton metric={metric} />
     </div>
   );
 }

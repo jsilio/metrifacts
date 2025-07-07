@@ -55,42 +55,34 @@ export const getMetricEntries = async (
     query ? `?${query}` : ""
   }`;
 
-  console.log("API Request:", {
-    url,
-    params,
-    metricId,
-  });
-
   const response = await fetch(url);
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error("API Error:", {
-      status: response.status,
-      statusText: response.statusText,
-      error: errorText,
-    });
+
     throw new Error(
       `Failed to fetch metric entries: ${response.status} ${errorText}`
     );
   }
 
   const data = await response.json();
-  console.log("API Response:", data);
+
   return data;
 };
 
 export const createMetricEntry = async (
-  metricId: string,
   entry: CreateMetricEntrySchema
 ): Promise<MetricEntry> => {
-  const response = await fetch(`${API_BASE_URL}/metrics/${metricId}/entries`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(entry),
-  });
+  const response = await fetch(
+    `${API_BASE_URL}/metrics/${entry.metricId}/entries`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(entry),
+    }
+  );
 
   if (!response.ok) {
     const error = await response.text();
@@ -131,14 +123,8 @@ export function useCreateMetricEntry({
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      metricId,
-      ...data
-    }: CreateMetricEntrySchema & { metricId: string }) => {
-      if (!metricId) {
-        throw new Error("Metric ID is required");
-      }
-      return createMetricEntry(metricId, data);
+    mutationFn: (data: CreateMetricEntrySchema) => {
+      return createMetricEntry(data);
     },
     onSuccess: (data, { metricId }) => {
       queryClient.invalidateQueries({

@@ -17,16 +17,16 @@ export function MetricList({ category = "general", metrics }: MetricListProps) {
 
       <ul
         className={cn(
-          "grid items-stretch gap-10",
-          metrics.length === 1 && " grid-cols-1",
-          metrics.length === 2 && "grid-cols-2",
-          metrics.length >= 3 && "grid-cols-2"
+          "grid grid-cols-1 items-stretch gap-10",
+          metrics.length >= 2 && "lg:grid-cols-2"
         )}
       >
         {metrics.map((metric, index) => (
           <li
             key={metric.id}
-            className={cn(metrics.length >= 3 && index === 0 && "col-span-2")}
+            className={cn(
+              metrics.length >= 3 && index === 0 && "lg:col-span-2"
+            )}
           >
             <MetricCard {...metric} />
           </li>

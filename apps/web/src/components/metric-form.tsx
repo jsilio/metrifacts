@@ -44,7 +44,7 @@ export function MetricForm({ onCancel, onSuccess }: MetricFormProps) {
     defaultValues: {
       name: "",
       description: "",
-      category: "general",
+      category: "business",
     },
   });
 
@@ -110,9 +110,12 @@ export function MetricForm({ onCancel, onSuccess }: MetricFormProps) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
+                  <SelectItem value="business">Business</SelectItem>
+                  <SelectItem value="performance">Performance</SelectItem>
+                  <SelectItem value="user-engagement">
+                    User Engagement
+                  </SelectItem>
                   <SelectItem value="general">General</SelectItem>
-                  <SelectItem value="business">Revenue</SelectItem>
-                  <SelectItem value="users">Users</SelectItem>
                 </SelectContent>
               </Select>
 
