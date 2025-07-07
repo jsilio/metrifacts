@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "metrifacts",
-  description: "metrifacts",
+  title: "Metrifacts",
+  description: "Track your metrics",
 };
 
 export default function RootLayout({
