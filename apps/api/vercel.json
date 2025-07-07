@@ -1,4 +1,12 @@
 {
+  "functions": {
+    "api/index.ts": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "env": {
+    "NODEJS_HELPERS": "0"
+  },
   "rewrites": [
     {
       "source": "/(.*)",
