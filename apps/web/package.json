@@ -15,6 +15,7 @@
     "@hookform/resolvers": "^5.1.1",
     "@metrifacts/api": "workspace:*",
     "@tanstack/react-query": "^5.80.5",
+    "@vercel/analytics": "^1.5.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",

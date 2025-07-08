@@ -8,6 +8,7 @@ import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import { AddEntryButton } from "@/components/add-entry-form";
+import { MetricStats } from "@/components/metric-stats";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -87,7 +88,7 @@ export function MetricCard(metric: Metric) {
 
   return (
     <Card className="h-full">
-      <CardHeader className="flex flex-col lg:flex-row gap-4 justify-between">
+      <CardHeader className="flex flex-col sm:flex-row gap-4 justify-between">
         <div>
           <CardTitle className="text-base font-medium">{metric.name}</CardTitle>
           {metric.description && (
@@ -113,63 +114,67 @@ export function MetricCard(metric: Metric) {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4 mt-6">
+      <CardContent>
         {chartData.length === 0 ? (
           <EmptyState metric={metric} hasData={Boolean(entries?.length)} />
         ) : (
-          <ChartContainer config={chartConfig} className="h-[220px] w-full">
-            <LineChart
-              accessibilityLayer
-              data={chartData}
-              margin={{ right: 12 }}
-            >
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="date"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                minTickGap={32}
-                tickFormatter={(value: string) =>
-                  period === "24h"
-                    ? format(new Date(value), "HH:mm a")
-                    : format(new Date(value), "MMM d")
-                }
-              />
-              <YAxis
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                minTickGap={16}
-                tickFormatter={(value) =>
-                  new Intl.NumberFormat("en", {
-                    notation: "compact",
-                    style: metric.unit === "$" ? "currency" : "decimal",
-                    currency: "USD",
-                  }).format(value) + (metric.unit === "%" ? "%" : "")
-                }
-              />
-              <ChartTooltip
-                cursor={false}
-                content={
-                  <ChartTooltipContent
-                    labelFormatter={(value) =>
-                      period === "24h"
-                        ? format(new Date(value), "HH:mm a")
-                        : format(new Date(value), "MMM d, yyyy")
-                    }
-                  />
-                }
-              />
-              <Line
-                dataKey="value"
-                type="natural"
-                stroke="var(--color-value)"
-                strokeWidth={2}
-                dot={false}
-              />
-            </LineChart>
-          </ChartContainer>
+          <section className="space-y-8">
+            <MetricStats entries={chartData} unit={metric.unit} />
+
+            <ChartContainer config={chartConfig} className="h-[220px] w-full">
+              <LineChart
+                accessibilityLayer
+                data={chartData}
+                margin={{ right: 12 }}
+              >
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  minTickGap={32}
+                  tickFormatter={(value: string) =>
+                    period === "24h"
+                      ? format(new Date(value), "HH:mm a")
+                      : format(new Date(value), "MMM d")
+                  }
+                />
+                <YAxis
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  minTickGap={16}
+                  tickFormatter={(value) =>
+                    new Intl.NumberFormat("en", {
+                      notation: "compact",
+                      style: metric.unit === "$" ? "currency" : "decimal",
+                      currency: "USD",
+                    }).format(value) + (metric.unit === "%" ? "%" : "")
+                  }
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={
+                    <ChartTooltipContent
+                      labelFormatter={(value) =>
+                        period === "24h"
+                          ? format(new Date(value), "HH:mm a")
+                          : format(new Date(value), "MMM d, yyyy")
+                      }
+                    />
+                  }
+                />
+                <Line
+                  dataKey="value"
+                  type="natural"
+                  stroke="var(--color-value)"
+                  strokeWidth={2}
+                  dot={false}
+                />
+              </LineChart>
+            </ChartContainer>
+          </section>
         )}
       </CardContent>
     </Card>

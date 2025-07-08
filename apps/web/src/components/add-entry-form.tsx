@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateMetricEntrySchema, type Metric } from "@metrifacts/api/schema";
-
+import { format, parseISO } from "date-fns";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -95,9 +95,11 @@ export function AddEntryForm({
                 <Input
                   type="datetime-local"
                   {...field}
-                  value={new Date(field.value || "").toISOString().slice(0, 16)}
+                  value={format(parseISO(field.value), "yyyy-MM-dd'T'HH:mm")}
                   onChange={(e) =>
-                    field.onChange(new Date(e.target.value).toISOString())
+                    field.onChange(
+                      new Date(e.target.value || Date.now()).toISOString()
+                    )
                   }
                 />
               </FormControl>

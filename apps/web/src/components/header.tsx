@@ -3,7 +3,7 @@
 import { ChartSplineIcon } from "lucide-react";
 import Link from "next/link";
 
-import { AddMetricButton } from "@/components/metric-form";
+import { AddMetricButton } from "@/components/add-metric-form";
 
 export function Header() {
   return (

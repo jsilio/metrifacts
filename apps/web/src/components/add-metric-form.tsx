@@ -44,7 +44,8 @@ export function MetricForm({ onCancel, onSuccess }: MetricFormProps) {
     defaultValues: {
       name: "",
       description: "",
-      category: "business",
+      category: "general",
+      unit: "count",
     },
   });
 
@@ -117,9 +118,41 @@ export function MetricForm({ onCancel, onSuccess }: MetricFormProps) {
                     User Engagement
                   </SelectItem>
                   <SelectItem value="general">General</SelectItem>
+                  <SelectItem value="growth">Growth</SelectItem>
+                  <SelectItem value="product">Revenue</SelectItem>
                 </SelectContent>
               </Select>
 
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="unit"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex justify-between">Unit</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value ?? ""}
+                >
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a unit" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="count">Count</SelectItem>
+                    <SelectItem value="users">Users</SelectItem>
+                    <SelectItem value="$">USD</SelectItem>
+                    <SelectItem value="%">Percentage</SelectItem>
+                    <SelectItem value="ms">Milliseconds</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}

@@ -28,7 +28,7 @@ export type UpdateMetricSchema = z.infer<typeof UpdateMetricSchema>;
 export const MetricEntrySchema = z.object({
   id: z.string().cuid(),
   metricId: z.string().cuid(),
-  value: z.coerce.number().min(0, "Value must be greater than 0"),
+  value: z.number().positive("Value must be a positive number"),
   timestamp: z.string().datetime(),
 });
 export type MetricEntry = z.infer<typeof MetricEntrySchema>;

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { BarChart3Icon } from "lucide-react";
 
-import { AddMetricButton } from "@/components/metric-form";
+import { AddMetricButton } from "@/components/add-metric-form";
 import { MetricList } from "@/components/metric-list";
 import { Skeleton } from "@/components/ui/skeleton";
 import { metricsQueryOptions } from "@/hooks/use-metrics";
