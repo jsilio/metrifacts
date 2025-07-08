@@ -13,7 +13,7 @@ export function MetricStats({
   unit: Metric["unit"];
 }) {
   const stats = useMemo(() => {
-    if (!entries?.length) return null;
+    if (!entries?.length || entries.length === 1) return null;
 
     const values = entries.map((e) => e.value);
     const current = values[values.length - 1];
@@ -33,13 +33,17 @@ export function MetricStats({
 
   if (!stats) return null;
 
-  const formatValue = (value: number) =>
-    new Intl.NumberFormat("en", {
-      notation: "compact",
+  const formatValue = (value: number) => {
+    const formatted = new Intl.NumberFormat("en", {
       style: unit === "$" ? "currency" : "decimal",
       currency: "USD",
-    }).format(value) + (unit !== "count" && unit !== "$" ? ` ${unit}` : "");
+      maximumFractionDigits: unit === "%" ? 2 : 0,
+    }).format(value);
 
+    if (unit === "%") return `${formatted}%`;
+    if (unit && !["count", "$"].includes(unit)) return `${formatted} ${unit}`;
+    return formatted;
+  };
   return (
     <dl>
       <dt className="sr-only">Current value</dt>
